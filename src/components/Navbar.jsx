@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import RouteConstants from "../common/RouteConstants";
 
 const navLinks = [
@@ -6,6 +6,16 @@ const navLinks = [
     name: "home-outline",
     title: "Dashboard",
     link: RouteConstants.Dashboard,
+  },
+  {
+    name: "wallet-outline",
+    title: "Ledger",
+    link: RouteConstants.Ledger,
+  },
+  {
+    name: "pie-chart-outline",
+    title: "Reports",
+    link: RouteConstants.Reports,
   },
   {
     name: "people-outline",
@@ -28,43 +38,39 @@ const navLinks = [
     link: RouteConstants.Documents,
   },
   {
-    name: "pie-chart-outline",
-    title: "Reports",
-    link: RouteConstants.Reports,
-  },
-  {
-    name: "wallet-outline",
-    title: "Ledger",
-    link: RouteConstants.Ledger,
-  },
-  {
     name: "settings-outline",
     title: "Settings",
     link: RouteConstants.Settings,
   },
 ];
+
 const Navbar = () => {
+  let location = useLocation().pathname;
+
   return (
     <div
-      className="h-screen hidden md:block md:w-1/5"
+      className="hidden h-screen md:block md:w-[260px]"
       style={{
         backgroundImage:
           "linear-gradient(to left bottom, #743cec, #763fec, #7943ec, #7b46eb, #7d49eb, #814eeb, #8454eb, #8859eb, #8d62ea, #936aea, #9872e9, #9d7ae8)",
-      }}>
-      <ul className="mt-20">
+      }}
+    >
+      <div className=" relative top-[40px]">
         {navLinks.map((navlink, index) => (
-          <li
+          <Link
+            to={navlink.link}
             key={index}
-            className="flex items-center  pl-2 pr-2 ml-2 mr-2 text-white hover:bg-[#5401e7] rounded-lg text-lg ">
-            <div className="m-2 text-xl font-semibold hover:font-bold">
+            className={` text-md mr-0.5 flex cursor-pointer items-center justify-stretch gap-2 rounded-sm px-1 text-white hover:bg-white hover:text-primary ${
+              location === navlink.link ? "bg-white text-primary" : ""
+            }`}
+          >
+            <div className="m-2">
               <ion-icon name={navlink.name}></ion-icon>
             </div>
-            <Link to={navlink.link} className="font-semibold hover:font-bold">
-              {navlink.title}
-            </Link>
-          </li>
+            <span>{navlink.title}</span>
+          </Link>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
