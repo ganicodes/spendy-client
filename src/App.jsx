@@ -12,7 +12,7 @@ export default function App() {
     <div className="md:flex">
       <Router>
         <Navbar />
-        <div className="md:flex md:flex-col w-full">
+        <div className="w-full md:flex md:flex-col">
           <Topbar />
           <Routes>
             <Route
