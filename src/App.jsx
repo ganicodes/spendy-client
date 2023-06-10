@@ -1,18 +1,18 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Dashboard from "./pages/Dashboard";
-import Ledger from "./pages/Ledger";
-import Reports from "./pages/Reports";
+import Navbar from "./components/shared/Navbar";
+import Dashboard from "./pages/dashboard/container/Dashboard";
+import Ledger from "./pages/ledger/container/Ledger";
+import Reports from "./pages/reports/container/Reports";
 import RouteConstants from "./common/RouteConstants";
-import Topbar from "./components/Topbar";
+import Topbar from "./components/shared/Topbar";
 
 export default function App() {
   return (
     <div className="md:flex">
       <Router>
         <Navbar />
-        <div className="md:flex md:flex-col w-full">
+        <div className="w-full md:flex md:flex-col">
           <Topbar />
           <Routes>
             <Route
