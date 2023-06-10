@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import RouteConstants from "../common/RouteConstants";
+import RouteConstants from "../../common/RouteConstants";
 
 const navLinks = [
   {
