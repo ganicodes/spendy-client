@@ -59,11 +59,11 @@ const Navbar = () => {
 
   return (
     <div
-      className="hidden h-screen bg-primary md:block md:w-[280px]"
-      style={{
-        backgroundImage:
-          "linear-gradient(to left bottom, #743cec, #763fec, #7943ec, #7b46eb, #7d49eb, #814eeb, #8454eb, #8859eb, #8d62ea, #936aea, #9872e9, #9d7ae8)",
-      }}
+      className="hidden h-screen bg-primary dark:border-r dark:border-gray-700 dark:bg-dark md:block md:w-[280px]"
+      // style={{
+      //   backgroundImage:
+      //     "linear-gradient(to left bottom, #743cec, #763fec, #7943ec, #7b46eb, #7d49eb, #814eeb, #8454eb, #8859eb, #8d62ea, #936aea, #9872e9, #9d7ae8)",
+      // }}
     >
       <div className=" relative top-[50px]">
         {navLinks.map((navlink, index) => (
