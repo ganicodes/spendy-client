@@ -9,7 +9,8 @@ export default {
       colors: {
         primary: '#804DEB',
         primaryVariant: '#9D7AE8',
-        dark: '#111827'
+        dark: '#060b10',
+        darkVariant: '12181f',
       }
     },
   },
