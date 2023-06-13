@@ -12,6 +12,9 @@ export default {
         primaryVariant: '#9D7AE8',
         dark: '#060b10',
         darkVariant: '12181f',
+      },
+      transitionDuration: {
+        '3000': '3000ms',
       }
     },
   },
