@@ -10,8 +10,12 @@ export default {
       colors: {
         primary: '#804DEB',
         primaryVariant: '#9D7AE8',
-        dark: '#060b10',
+        // dark: '#13192B',
+        dark: '#0f0f0f',
         darkVariant: '12181f',
+      },
+      transitionDuration: {
+        '3000': '3000ms',
       }
     },
   },

@@ -44,16 +44,6 @@ const navLinks = [
   },
 ];
 
-const Toggle = () => {
-  return (
-    <label className=" relative top-4 ml-4 inline-flex cursor-pointer items-center">
-      <input type="checkbox" value="" className="peer sr-only" />
-      <div className="peer h-6 w-11 rounded-full bg-white after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-primary after:transition-all after:content-[''] peer-checked:bg-white peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-primary"></div>
-      <span className="ml-3 text-white">Dark Mode</span>
-    </label>
-  );
-};
-
 const Navbar = () => {
   let location = useLocation().pathname;
 
@@ -80,7 +70,6 @@ const Navbar = () => {
             <span>{navlink.title}</span>
           </Link>
         ))}
-        <Toggle />
       </div>
     </div>
   );
