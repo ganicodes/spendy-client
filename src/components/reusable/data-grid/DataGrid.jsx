@@ -113,7 +113,7 @@ export const DataGrid = ({
   return (
     // <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
     <table className="datagridtable relative w-full text-left text-sm text-gray-500 dark:text-gray-400">
-      <thead className="sticky left-0 top-0 bg-primaryVariant text-xs uppercase text-white dark:bg-gray-700 dark:text-gray-400">
+      <thead className="sticky left-0 top-0 bg-primary text-xs uppercase text-white dark:bg-gray-700 dark:text-gray-400">
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
@@ -146,7 +146,7 @@ export const DataGrid = ({
         {table.getRowModel().rows.map((row) => (
           <tr
             key={row.id}
-            className="cursor-default border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
+            className="cursor-default border-b border-primaryVariant bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
           >
             {row.getVisibleCells().map((cell) => (
               <td key={cell.id} className="px-6 py-4">
