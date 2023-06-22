@@ -9,3 +9,14 @@ ion-icon {
 .datagridtable ion-icon {
   font-size: inherit;
 }
+.react-datepicker-wrapper {
+  width: 99%;
+}
+.calendar-dark .react-datepicker__month-container,
+.calendar-dark .react-datepicker__header {
+  @apply bg-gray-700;
+}
+
+.calendar-dark .react-datepicker__day--selected {
+  @apply bg-primary;
+}

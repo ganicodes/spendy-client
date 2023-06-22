@@ -1,15 +1,19 @@
 import PropTypes, { object } from "prop-types";
-const Select = ({ label, options }) => {
+const Select = ({ placeholder, options }) => {
   return (
-    <div className="mr-4 inline-block">
+    <div className="mr-4 inline-block w-[100%]">
       <select
         id="countries"
         required
         placeholder="Select here"
-        className="block rounded border border-primary p-2.5 text-sm
-      focus:border-primary focus:outline-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary dark:focus:ring-primary"
+        defaultValue={0}
+        className="block w-[99%] rounded border border-primary p-2.5 text-sm
+      focus:border-primary  focus:outline-primary focus:ring-primary dark:border-primary dark:bg-gray-700 dark:text-white
+      dark:placeholder-gray-400 dark:focus:border-primary dark:focus:ring-primary"
       >
-        <option selected>{label}</option>
+        <option disabled value={0}>
+          {placeholder}
+        </option>
         {options.map((option, index) => (
           <option key={index} value={option.value}>
             {option.label}
@@ -20,7 +24,7 @@ const Select = ({ label, options }) => {
   );
 };
 Select.propTypes = {
-  label: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(object),
 };
 export default Select;
