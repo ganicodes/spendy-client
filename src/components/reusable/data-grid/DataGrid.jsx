@@ -26,29 +26,39 @@ Checkbox.propTypes = {
   row: PropTypes.object,
 };
 
-function EditActions() {
+function EditActions({ row, onEdit }) {
   return (
     <a
-      href="#"
-      className="font-medium text-blue-600 hover:underline dark:text-blue-500"
+      onClick={() => onEdit(row.original)}
+      className="font-medium text-primary hover:underline dark:text-primary"
     >
       Edit
     </a>
   );
 }
 
-function DeleteAction() {
+EditActions.propTypes = {
+  row: PropTypes.object,
+  onEdit: PropTypes.func,
+};
+
+function DeleteAction({ row, onDelete }) {
   return (
     <a
-      href="#"
+      onClick={() => onDelete(row.original)}
       className="font-medium text-red-600 hover:underline dark:text-red-500"
     >
       Remove
     </a>
   );
 }
+
+DeleteAction.propTypes = {
+  row: PropTypes.object,
+  onDelete: PropTypes.func,
+};
+
 const generateColumns = (arr) => {
-  // eslint-disable-next-line react/prop-types
   let columns = [];
   columns = arr.map((item) =>
     columnHelper.accessor(item.id, {
@@ -56,22 +66,24 @@ const generateColumns = (arr) => {
       cell: (info) =>
         item.id == "date"
           ? convertDateToLocaleDateString(info.getValue())
+          : item.id == "amount"
+          ? "$" + info.getValue()
           : info.getValue(),
     })
   );
   return columns;
 };
 
-const generateActions = (actions) => {
+const generateActions = (actions, onEdit, onDelete) => {
   if (!actions) return [];
   return [
     columnHelper.display({
       id: "edit",
-      cell: (props) => <EditActions row={props} />,
+      cell: ({ row }) => <EditActions row={row} onEdit={onEdit} />,
     }),
     columnHelper.display({
       id: "delete",
-      cell: (props) => <DeleteAction row={props} />,
+      cell: ({ row }) => <DeleteAction row={row} onDelete={onDelete} />,
     }),
   ];
 };
@@ -91,6 +103,8 @@ export const DataGrid = ({
   checkbox = false,
   actions = false,
   gridData,
+  onEdit,
+  onDelete,
 }) => {
   const data = useMemo(() => gridData, [gridData]);
 
@@ -98,9 +112,9 @@ export const DataGrid = ({
     () => [
       ...generateCheckbox(checkbox),
       ...generateColumns(gridColumns),
-      ...generateActions(actions),
+      ...generateActions(actions, onEdit, onDelete),
     ],
-    [gridColumns, checkbox, actions]
+    [checkbox, gridColumns, actions, onEdit, onDelete]
   );
 
   const table = useReactTable({
@@ -182,4 +196,6 @@ DataGrid.propTypes = {
   checkbox: PropTypes.bool,
   actions: PropTypes.bool,
   gridData: PropTypes.arrayOf(object),
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
 };

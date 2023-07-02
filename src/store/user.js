@@ -5,13 +5,13 @@ const user = createSlice({
     initialState: {
         name: '',
         email: '',
-        userID: 0,
+        userId: 0,
     },
     reducers: {
         update: (state, actions) => {
             state.name = actions.payload.name;
             state.email = actions.payload.email;
-            state.userID = actions.payload.userID;
+            state.userId = actions.payload.userId;
         }
     }
 })
