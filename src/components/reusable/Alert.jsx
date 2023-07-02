@@ -1,6 +1,8 @@
 // This is a reusable alert component - just pass variant & message props and use it
-import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setShowAlert } from "../../store/alert";
 
 const alertClasses = {
   error: "bg-red-300 text-red-800 dark:bg-gray-800 dark:text-red-400",
@@ -10,12 +12,19 @@ const alertClasses = {
   success: "bg-green-300 text-green-800 dark:bg-gray-800 dark:bg-green-400",
 };
 
-const Alert = ({ message, variant }) => {
-  const [showAlert, setShowAlert] = useState(true);
+const Alert = () => {
+  const { showAlert, message, variant } = useSelector((state) => state.alert);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const timeId = setTimeout(() => {
-      setShowAlert(false);
+      dispatch(
+        setShowAlert({
+          showAlert: false,
+          variant: null,
+          message: "",
+        })
+      );
     }, 3000);
 
     return () => {
@@ -38,11 +47,18 @@ const Alert = ({ message, variant }) => {
   );
 };
 
-const AdvancedAlert = ({ message, variant }) => {
-  const [showAlert, setShowAlert] = useState(true);
+const AdvancedAlert = () => {
+  const { showAlert, message, variant } = useSelector((state) => state.alert);
+  const dispatch = useDispatch();
 
   const handleCloseAction = () => {
-    setShowAlert(false);
+    dispatch(
+      setShowAlert({
+        showAlert: false,
+        variant: null,
+        message: "",
+      })
+    );
   };
 
   // If showAlert is false the component will return null and stop here
