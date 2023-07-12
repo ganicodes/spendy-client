@@ -11,5 +11,5 @@ export const APIURLConstant = {
     GET_INCOME_LIST: (userId) => `/income/getIncomeList?userId=${userId}`,
     INSERT_INCOME_RECORD: `/income/insertIncome`,
     DELETE_INCOME_RECORD: (id) => `/income/deleteIncome?id=${id}`,
-    EDIT_INCOME_RECORD: (id) => `/expense/editIncome?id=${id}`,
+    EDIT_INCOME_RECORD: (id) => `/income/editIncome?id=${id}`,
 }
