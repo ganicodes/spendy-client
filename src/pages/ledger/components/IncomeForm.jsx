@@ -12,7 +12,7 @@ import Select from "../../../components/reusable/Select";
 import APIHelper from "../../../helper/APIHelper";
 import { setShowAlert } from "../../../store/alert";
 
-const IncomeForm = ({ getIncomeList }) => {
+const IncomeForm = ({ getIncomeList, editIncomeData, resetEditIncomeData }) => {
   const {
     register,
     handleSubmit,
@@ -20,18 +20,32 @@ const IncomeForm = ({ getIncomeList }) => {
     reset,
   } = useForm();
 
-  // const theme = useSelector((state) => state.theme.theme);
   const { theme } = useSelector((state) => state.theme);
   const { userId } = useSelector((state) => state.user);
 
-  const [date, setDate] = useState(new Date());
+  // const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(null);
   const [incomeSourceOptions, setIncomeSourceOptions] = useState([]);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     getIncomeSource();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    // resetting while editing records
+    if (editIncomeData) {
+      setDate(new Date(editIncomeData.date));
+
+      reset({
+        amount: editIncomeData.amount,
+        description: editIncomeData.description,
+        source: editIncomeData.source,
+      });
+    }
+  }, [editIncomeData, reset]);
 
   const getIncomeSource = async () => {
     try {
@@ -78,32 +92,47 @@ const IncomeForm = ({ getIncomeList }) => {
   };
 
   const insertIncomeRecord = async (obj) => {
+    let id = editIncomeData ? editIncomeData._id : 0;
     try {
-      const { data } = await APIHelper.post(
-        APIURLConstant.INSERT_INCOME_RECORD,
-        obj
-      );
-      if (data && data.success) {
+      let response = null;
+      if (id === 0) {
+        const { data } = await APIHelper.post(
+          APIURLConstant.INSERT_INCOME_RECORD,
+          obj
+        );
+        response = data;
+      } else {
+        const { data } = await APIHelper.put(
+          APIURLConstant.EDIT_INCOME_RECORD(id),
+          obj
+        );
+        response = data;
+      }
+      if (response && response.success) {
         dispatch(
           setShowAlert({
             showAlert: true,
             variant: "success",
-            message: data.message,
+            message: response.message,
           })
         );
         getIncomeList();
-        reset();
-        setDate(new Date());
+        reset({
+          amount: "",
+          description: "",
+          source: "",
+        });
+        setDate(null);
+        resetEditIncomeData();
+      } else {
+        dispatch(
+          setShowAlert({
+            showAlert: true,
+            variant: "error",
+            message: response.message,
+          })
+        );
       }
-      // else {
-      //   dispatch(
-      //     setShowAlert({
-      //       showAlert: true,
-      //       variant: "error",
-      //       message: data.message,
-      //     })
-      //   );
-      // }
     } catch (error) {
       console.log(error);
     }
@@ -165,7 +194,10 @@ const IncomeForm = ({ getIncomeList }) => {
         {errors.description && <span className="text-rose-700">Required</span>}
       </div>
       <div className="relative right-0 basis-full">
-        <Button title="Add Income" onClick={handleSubmit(handleAddIncome)} />
+        <Button
+          title={editIncomeData ? "Update Income" : "Add Income"}
+          onClick={handleSubmit(handleAddIncome)}
+        />
       </div>
     </form>
   );
@@ -173,5 +205,7 @@ const IncomeForm = ({ getIncomeList }) => {
 
 IncomeForm.propTypes = {
   getIncomeList: PropTypes.func,
+  resetEditIncomeData: PropTypes.func,
+  editIncomeData: PropTypes.object,
 };
 export default IncomeForm;

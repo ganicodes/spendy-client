@@ -153,7 +153,7 @@ const ExpenseForm = ({
           expenseType: "",
           expenseCategory: "",
         });
-        setDate(new Date());
+        setDate(null);
         resetEditExpenseData(); //resetting the object to be edited
       } else {
         dispatch(
