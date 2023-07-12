@@ -11,7 +11,15 @@ import Select from "../../../components/reusable/Select";
 import APIHelper from "../../../helper/APIHelper";
 import { setShowAlert } from "../../../store/alert";
 
-const ExpenseForm = ({ getExpenseList }) => {
+const ExpenseForm = ({
+  getExpenseList,
+  editExpenseData,
+  resetEditExpenseData,
+}) => {
+  const theme = useSelector((state) => state.theme.theme);
+  const { userId } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -19,33 +27,45 @@ const ExpenseForm = ({ getExpenseList }) => {
     reset,
   } = useForm();
 
-  const theme = useSelector((state) => state.theme.theme);
-  const { userId } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-
-  const [date, setDate] = useState(new Date());
-  // const [date, setDate] = useState(null);
+  // const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(null);
   const [expenseConfig, setExpenseConfig] = useState([]);
   const [expenseCategoryOptions, setExpenseCategoryOptions] = useState([]);
   const [expenseTypeOptions, setExpenseTypeOptions] = useState([]);
   const [activeType, setActiveType] = useState(-1);
 
   useEffect(() => {
-    // populating expense type on mounting
+    // populating expense type dropdown values
     getExpenseTypes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
+    // populating expense categories on the basis of selected expense type
     if (activeType !== -1) {
       let temp = expenseConfig.expenseTypes[activeType];
       setExpenseCategoryOptions(
-        temp.map((item, index) => ({
+        temp.map((item) => ({
           label: item,
-          value: index,
         }))
       );
     }
   }, [activeType, expenseConfig]);
+
+  useEffect(() => {
+    // resetting while editing records
+    if (editExpenseData) {
+      setDate(new Date(editExpenseData.date));
+      setActiveType(editExpenseData.type);
+
+      reset({
+        amount: editExpenseData.amount,
+        description: editExpenseData.description,
+        expenseType: editExpenseData.type,
+        expenseCategory: editExpenseData.category,
+      });
+    }
+  }, [editExpenseData, expenseConfig.expenseTypes, reset]);
 
   const getExpenseTypes = async () => {
     // functing that will get the config from DB and filter the data to our use
@@ -55,17 +75,16 @@ const ExpenseForm = ({ getExpenseList }) => {
       );
       let newTypesArr = [];
       if (data.success) {
-        //saving data in local state so that it can be used later
         setExpenseConfig(data.data.find((item) => item.userId === userId));
 
         newTypesArr = Object.keys(
           data.data.find((item) => item.userId === userId).expenseTypes
         );
 
+        // populating options in Expense Type dropdown
         setExpenseTypeOptions(
-          newTypesArr.map((item, index) => ({
+          newTypesArr.map((item) => ({
             label: item,
-            value: index,
           }))
         );
       }
@@ -73,19 +92,6 @@ const ExpenseForm = ({ getExpenseList }) => {
       console.log(error);
     }
   };
-
-  // const handleOnBlur = ({ target: { value } }) => {
-  //   const date = new Date(value);
-  //   if (!isValidDate(date)) {
-  //     dispatch(
-  //       setShowAlert({
-  //         showAlert: true,
-  //         variant: "warning",
-  //         message: "Invalid date! Please check again!",
-  //       })
-  //     );
-  //   }
-  // };
 
   const handleAddExpense = (data) => {
     if (!date) {
@@ -113,31 +119,48 @@ const ExpenseForm = ({ getExpenseList }) => {
   };
 
   const insertExpenseRecord = async (obj) => {
-    // need to make POST API call here to save data into the grid
+    let id = editExpenseData ? editExpenseData._id : 0;
 
     try {
-      let { data } = await APIHelper.post(
-        APIURLConstant.INSERT_EXPENSE_RECORD,
-        obj
-      );
+      let response = null;
+      // if id != 0 -> editing
+      if (id === 0) {
+        let { data } = await APIHelper.post(
+          APIURLConstant.INSERT_EXPENSE_RECORD,
+          obj
+        );
+        response = data;
+      } else {
+        let { data } = await APIHelper.put(
+          APIURLConstant.EDIT_EXPENSE_RECORD(id),
+          obj
+        );
+        response = data;
+      }
 
-      if (data && data.success) {
+      if (response && response.success) {
         dispatch(
           setShowAlert({
             showAlert: true,
             variant: "success",
-            message: data.message,
+            message: response.message,
           })
         );
         getExpenseList();
-        reset();
+        reset({
+          amount: "",
+          description: "",
+          expenseType: "",
+          expenseCategory: "",
+        });
         setDate(new Date());
+        resetEditExpenseData(); //resetting the object to be edited
       } else {
         dispatch(
           setShowAlert({
             showAlert: true,
             variant: "error",
-            message: data.message,
+            message: response.message,
           })
         );
       }
@@ -159,7 +182,6 @@ const ExpenseForm = ({ getExpenseList }) => {
           onChange={(date) => {
             setDate(date);
           }}
-          // onBlur={handleOnBlur}
           maxDate={new Date()}
           peekNextMonth
           showMonthDropdown
@@ -215,7 +237,7 @@ const ExpenseForm = ({ getExpenseList }) => {
       </div>
       <div className="relative right-0 basis-full">
         <Button
-          title={"Add Expense"}
+          title={editExpenseData ? "Edit Expense" : "Add Expense"}
           onClick={handleSubmit(handleAddExpense)}
         />
       </div>
@@ -225,6 +247,8 @@ const ExpenseForm = ({ getExpenseList }) => {
 
 ExpenseForm.propTypes = {
   getExpenseList: PropTypes.func,
+  resetEditExpenseData: PropTypes.func,
+  editExpenseData: PropTypes.object,
 };
 
 export default ExpenseForm;
